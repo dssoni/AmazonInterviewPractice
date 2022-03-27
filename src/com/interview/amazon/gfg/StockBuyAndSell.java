@@ -1,6 +1,5 @@
 package com.interview.amazon.gfg;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +10,7 @@ import java.util.ArrayList;
  * 
  * Author: Dhruv Soni
  * 
- * Date : 22th March 2022
+ * Date : 27th March 2022
  * 
  */
 
@@ -20,111 +19,52 @@ public class StockBuyAndSell {
 	static ArrayList<ArrayList<Integer>> stockBuySell(int A[], int n) {
 
 		ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
-		int start = 0, end = 1;
-		int maxProfit = 0;
+		ArrayList<Integer> data = new ArrayList<Integer>();
+		int maxProfit = -1;
+		int j = 0;
+		for (int i = 0; i + 1 < n; i++) {
+			j = i + 1;
 
-		if (n == 1) {
-			return result;
-		}
-		ArrayList<Integer> data = new ArrayList<>();
-		while (end < n && start < end) {
-
-			if (A[end] - A[start] >= maxProfit && A[end] != A[start]) {
-
-				data = new ArrayList<Integer>();
-				maxProfit = A[end] - A[start];
-				data.add(start);
-				data.add(end);
-
-				++end;
-
-			} else if (A[end] - A[start] < maxProfit && A[end] != A[start]) {
-
-				if (!data.isEmpty()) {
-					maxProfit = 0;
-					result.add(data);
-					data = new ArrayList<Integer>();
+			if (A[i] < A[j]) {
+				maxProfit = A[j] - A[i];
+				while (A[i] < A[j]) {
+					++j;
+					if (j == n) {
+						data.add(i);
+						data.add(j - 1);
+						result.add(data);
+						data = new ArrayList<Integer>();
+						maxProfit = -1;
+						i = j - 1;
+						break;
+					}
+					if (A[j] - A[i] > maxProfit) {
+						maxProfit = A[j] - A[i];
+					} else if (A[j] - A[i] <= maxProfit) {
+						data.add(i);
+						data.add(j - 1);
+						result.add(data);
+						data = new ArrayList<Integer>();
+						maxProfit = -1;
+						i = j - 1;
+						break;
+					}
 				}
-
-				start = end;
-				end = start + 1;
-
-			} else if (A[start] == A[end]) {
-
-				if (end == n - 1) {
-					result.forEach(i -> System.out.println(i));
-					System.out.println("returned from here......");
-					return result;
-
-				}
-
-				++end;
-
-			}
-
-			if (end == n) {
-				if (!data.isEmpty()) {
-					result.add(data);
-					result.forEach(i -> System.out.println(i));
-					return result;
+			} else if (A[i] > A[j] || A[i] == A[j]) {
+				if (maxProfit == -1) {
+					continue;
 				}
 			}
-
 		}
-
-		result.forEach(i -> System.out.println(i));
-
+		System.out.println(result);
 		return result;
 	}
 
 	public static void main(String[] args) {
 
-		int[] pass = new int[] { 1, 1, 1, 2, 1, 3 };
+		int[] pass = new int[] { 4, 2, 2, 2, 3 };
 		stockBuySell(pass, pass.length);
 
 	}
 
 }
-
-//while (end < A.length && start < end) {
-//
-//	if (A[start] < A[end]) {
-//
-//		if (A[end] - A[start] > maxProfit) {
-//
-//			data = new ArrayList<Integer>();
-//			maxProfit = A[end] - A[start];
-//			data.add(start);
-//			data.add(end);
-//
-//		}
-//
-//		if (end == A.length - 1) {
-//			maxProfit = 0;
-//			result.add(data);
-//		}
-//
-//		++end;
-//
-//	} else if (A[start] > A[end]) {
-//
-//		if (!data.isEmpty()) {
-//			maxProfit = 0;
-//			result.add(data);
-//		}
-//
-//		start = end;
-//		end = start + 1;
-//
-//	} else if (A[start] == A[end]) {
-//
-//		if (end == A.length - 1) {
-//			return result;
-//
-//		}
-//
-//		++end;
-//
-//	}
-//
-//}
